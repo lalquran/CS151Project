@@ -71,7 +71,7 @@ class CreateEventView extends JFrame implements ActionListener
 	{
 		error.setText("");
         try {
-            boolean flag = CalendarModel.createEvent(name.getText(),current.getText(),start.getText(), end.getText());
+            boolean flag = Scheduler.createEvent(name.getText(),current.getText(),start.getText(), end.getText());
             if(flag){
                 this.setVisible(false);
                 this.dispose();
