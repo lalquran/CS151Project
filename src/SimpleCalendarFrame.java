@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 
@@ -12,7 +14,11 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
     private CalendarModel CalendarModel;
     //day view is the right side of the panel
     private DayView DayView;
+    private MonthView MonthView;
     final JPanel rightPanel;
+    private JPanel lastView = new JPanel();
+    private JPanel rightView = new JPanel();
+    
 
     /**
      * CalendarFrame constructor creates a CalendarFrame object
@@ -25,7 +31,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         CalendarModel = new CalendarModel();
 
         DayView = new DayView(CalendarModel);
-       
+        
         rightPanel = new JPanel(new BorderLayout());
         JPanel rightChoicePanel = new JPanel(new FlowLayout());
        
@@ -39,6 +45,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         rightChoicePanel.add(monthChoice);
         rightChoicePanel.add(fourDaysChoice);
         rightChoicePanel.add(agendaChoice);
+        
+        
+       
        
         rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
        
@@ -47,6 +56,8 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         eventController = new CalendarController(CalendarModel);
         eventController.set(DayView);
 
+        MonthView = new MonthView(eventController, CalendarModel);
+        
         final CalendarView calendar = new CalendarView(eventController, CalendarModel);
         JPanel left = new JPanel();
         left.setLayout(new BorderLayout());
@@ -68,8 +79,39 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         rightPanel.validate();
         eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
         rightPanel.repaint();
+        
+        
+        
+        
+        
+        dayChoice.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightPanel.remove(rightView);
+				rightPanel.add(DayView, BorderLayout.CENTER);
+				add(rightPanel);
+				lastView = rightView;
+				rightView = DayView;
+				rightPanel.validate();
+				repaint();
+			}
+        });
+        
+        monthChoice.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightPanel.remove(rightView);
+				rightPanel.add(MonthView, BorderLayout.CENTER);
+				add(rightPanel);
+				lastView = rightView;
+				rightView = MonthView;
+				rightPanel.validate();
+				repaint();
+			}
+        });
     }
 
+  
  
     /**
      * stateChanged() repaints dayView
@@ -77,8 +119,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
      */
     public void stateChanged(ChangeEvent e) 
     {
-    	rightPanel.removeAll();
-        rightPanel.add(DayView, BorderLayout.CENTER);
+    	rightPanel.remove(lastView);
+    	
+        rightPanel.add(rightView, BorderLayout.CENTER);
         rightPanel.validate();
         rightPanel.repaint();
         this.repaint();

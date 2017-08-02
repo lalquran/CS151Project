@@ -8,7 +8,7 @@ import java.util.TreeMap;
 /**
  * DayView class is a JPanel with strings of times and JTables
  */
-public class DayView extends JPanel {
+public class DayView extends JPanel{
 
 	///////////////////////////////////////
 	//Right side of the Application frame//
@@ -21,6 +21,7 @@ public class DayView extends JPanel {
     private CalendarController eventController;
     private CalendarModel calendarModelEvents;
     private Color color;
+    public String option = "DayView";
     /**
      * array of time strings
      */
