@@ -32,14 +32,10 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         JButton dayChoice = new JButton("Day");
         JButton weekChoice = new JButton("Week");
         JButton monthChoice = new JButton("Month");
-        JButton fourDaysChoice = new JButton("4 Days");
-        JButton agendaChoice = new JButton("Agenda");
         rightChoicePanel.add(dayChoice);
         rightChoicePanel.add(weekChoice);
-        rightChoicePanel.add(monthChoice);
-        rightChoicePanel.add(fourDaysChoice);
-        rightChoicePanel.add(agendaChoice);
-       
+        
+        
         rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
        
         CalendarModel.addChangeListener(this);

@@ -39,7 +39,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         rightChoicePanel.add(monthChoice);
         rightChoicePanel.add(fourDaysChoice);
         rightChoicePanel.add(agendaChoice);
-       
+        
         rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
        
         CalendarModel.addChangeListener(this);
