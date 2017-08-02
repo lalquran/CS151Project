@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 8 elements from project &apos;src&apos;&#x0A;- Original project: &apos;src&apos;&#x0A;- Original elements:&#x0A;     CalendarController.java&#x0A;     CalendarModel.java&#x0A;     CalendarView.java&#x0A;     CreateEventView.java&#x0A;     DayView.java&#x0A;     Event.java&#x0A;     GUICalendarTester.java&#x0A;     SimpleCalendarFrame.java" description="Delete elements" element1="/&lt;{CreateEventView.java" element2="/&lt;{CalendarController.java" element3="/&lt;{SimpleCalendarFrame.java" element4="/&lt;{CalendarView.java" element5="/&lt;{CalendarModel.java" element6="/&lt;{Event.java" element7="/&lt;{GUICalendarTester.java" element8="/&lt;{DayView.java" elements="8" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1501536466510" subPackages="false" version="1.0"/>
+</session>

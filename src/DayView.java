@@ -10,6 +10,17 @@ import java.util.TreeMap;
  */
 public class DayView extends JPanel {
 
+	///////////////////////////////////////
+	//Right side of the Application frame//
+	///////////////////////////////////////
+	
+	private JLabel date;
+    private JScrollPane p;
+    private JTable leftTable, rightTable;
+    private JPanel p2;
+    private CalendarController eventController;
+    private CalendarModel calendarModelEvents;
+    private Color color;
     /**
      * array of time strings
      */
@@ -194,12 +205,6 @@ public class DayView extends JPanel {
     }
 
 
-    private JLabel date;
-    private JScrollPane p;
-    private JTable leftTable, rightTable;
-    private JPanel p2;
-    private CalendarController eventController;
-    private CalendarModel calendarModelEvents;
-    private Color color;
+    
 }
 

@@ -8,10 +8,20 @@ import java.text.ParseException;
 
 /**
  * EventView class is used when user wants to create a new event.
- * Provides GUI for creating events
+ * Provides GUI JFrame for creating events 
  */
 class CreateEventView extends JFrame implements ActionListener
 {
+	
+	
+	private CalendarModel model;
+    private JPanel firstP;
+    private JTextField name;
+    private JLabel to, current, info;
+    private JTextField start, end;
+    private JLabel error;
+    private CalendarController eventController;
+    
     public CreateEventView(CalendarModel event, CalendarController c)
     {
         model = event;
@@ -85,11 +95,4 @@ class CreateEventView extends JFrame implements ActionListener
         }
 
 	}
-    private CalendarModel model;
-    private JPanel firstP;
-    private JTextField name;
-    private JLabel to, current, info;
-    private JTextField start, end;
-    private JLabel error;
-    private CalendarController eventController;
 }

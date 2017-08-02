@@ -6,164 +6,166 @@ import java.util.GregorianCalendar;
  */
 public class CalendarController {
 
-    public final static String[] daysOfMonth = {
-        "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    };
+	/////////////////////////
+	/////Sets the DayView////
+	///Manipulates the date//
+	/////////////////////////
+	private DayView DayView;
+	private GregorianCalendar gc;
+	private CalendarModel CalendarModel;
 
-   /**
-    * Constructor of EventController
-    * @param: CalendarModel
-    */
-    CalendarController(CalendarModel CalendarModel)
-    {
-        this.CalendarModel = CalendarModel;
-        gc = new GregorianCalendar();
+	public final static String[] daysOfMonth = {
+			"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+	};
 
-    }
+	/**
+	 * Constructor of EventController
+	 * @param: CalendarModel
+	 */
+	CalendarController(CalendarModel CalendarModel)
+	{
+		this.CalendarModel = CalendarModel;
+		gc = new GregorianCalendar();
 
-    /**
-     * Constructor with no parameters
-     */
-   CalendarController()
-    {
-        gc = new GregorianCalendar();
-        this.CalendarModel = new CalendarModel();
-    }
+	}
 
-   /**
-    * calendar() returns GregorianCalendar object
-    */
-   
-    public GregorianCalendar calendar() 
-    {
-        return gc;
-    }
+	/**
+	 * Constructor with no parameters
+	 */
+	CalendarController()
+	{
+		gc = new GregorianCalendar();
+		this.CalendarModel = new CalendarModel();
+	}
 
-   /**
-    * set() takes DayView parameter
-    * @param: a DayView object
-    */
-    public void set(DayView a)
-    {
-        this.DayView = a;
-    }
+	/**
+	 * calendar() returns GregorianCalendar object
+	 */
+	public GregorianCalendar calendar() 
+	{
+		return gc;
+	}
 
-   /**
-    * get()
-    * return: DayView object
-    */
-    public DayView get()
-    {
-        return this.DayView;
-    }
+	/**
+	 * set() takes DayView parameter
+	 * @param: a DayView object
+	 */
+	public void set(DayView a)
+	{
+		this.DayView = a;
+	}
 
-    /**
-     * getMonth()
-     * returns current month
-     */
-    public int getMonth() 
-    {
-    	int a = (GregorianCalendar.MONTH);
-        return gc.get(a);
-    }
+	/**
+	 * get()
+	 * return: DayView object
+	 */
+	public DayView get()
+	{
+		return this.DayView;
+	}
 
-    /**
-     * getYear()
-     * returns current year
-     */
-    public int getYear() 
-    {
-    	int a = GregorianCalendar.YEAR;
-        return gc.get(a);
-    }
+	/**
+	 * getMonth()
+	 * returns current month
+	 */
+	public int getMonth() 
+	{
+		int a = (GregorianCalendar.MONTH);
+		return gc.get(a);
+	}
 
-    /**
-     * getDay()
-     * returns the current day
-     */
-    public int getDay() 
-    {
-    	int a = GregorianCalendar.DAY_OF_MONTH;
-        return gc.get(a);
-    }
+	/**
+	 * getYear()
+	 * returns current year
+	 */
+	public int getYear() 
+	{
+		int a = GregorianCalendar.YEAR;
+		return gc.get(a);
+	}
 
-    /**
-     * getUpcomingDay()
-     * increments day
-     */
-    public void getUpcomingDay() 
-    {
-    	int a = GregorianCalendar.DAY_OF_MONTH;
-        gc.add(a, 1);
-    }
+	/**
+	 * getDay()
+	 * returns the current day
+	 */
+	public int getDay() 
+	{
+		int a = GregorianCalendar.DAY_OF_MONTH;
+		return gc.get(a);
+	}
 
-    public  DayView getDayView(){
-    	return DayView;
-    }
-   /**
-    * getLastDay()
-    * decrements day
-    */
-    public void getLastDay() 
-    {
-    	int a = GregorianCalendar.DAY_OF_MONTH;
-        gc.add(a, -1);
-    }
+	/**
+	 * getUpcomingDay()
+	 * increments day
+	 */
+	public void getUpcomingDay() 
+	{
+		int a = GregorianCalendar.DAY_OF_MONTH;
+		gc.add(a, 1);
+	}
 
-    /**
-     * date2MMYYDD() formats date
-     * @return String
-     */
-    public String date2MMYYDD(){
-        return  Event.modifyStringToSort(getMonth()+1+"/"+getDay()+"/"+getYear());
-    }
+	public  DayView getDayView(){
+		return DayView;
+	}
+	/**
+	 * getLastDay()
+	 * decrements day
+	 */
+	public void getLastDay() 
+	{
+		int a = GregorianCalendar.DAY_OF_MONTH;
+		gc.add(a, -1);
+	}
 
-    public String date2MMYYDD(String string){
-        return  Event.modifyStringToSort(string);
-    }
-    
-    /**
-     * currentDate()
-     * sets today's date
-     */
-    public void currentDate() 
-    {
-    	int year = GregorianCalendar.YEAR;
-    	int month = GregorianCalendar.MONTH;
-    	int day = GregorianCalendar.DAY_OF_MONTH;
-        gc.set(year, Calendar.getInstance().get(year));
-        gc.set(month, Calendar.getInstance().get(month));
-        gc.set(day, Calendar.getInstance().get(day));
-    }
-    
-    /**
-     * currentDay()
-     * returns current day
-     */
-    public String currentDay() 
-    {
-    	int a = GregorianCalendar.DAY_OF_WEEK;
-        return daysOfMonth[gc.get(a)];
-    }
+	/**
+	 * date2MMYYDD() formats date
+	 * @return String
+	 */
+	public String date2MMYYDD(){
+		return  Event.modifyStringToSort(getMonth()+1+"/"+getDay()+"/"+getYear());
+	}
 
-   /**
-    * setCalendar() sets date
-    * @param : year, month, day
-    */
-    public void setCalendar(int y, int m, int d)
-    {
-        gc = new GregorianCalendar(y, m, d);
-    }
-    /**
-     * getCalendarModel()
-     * @return CalendarModel
-     */
-    public CalendarModel getCalendarModel(){
-    	return CalendarModel;
-    }
+	public String date2MMYYDD(String string){
+		return  Event.modifyStringToSort(string);
+	}
 
-    private DayView DayView;
-    private GregorianCalendar gc;
-    private CalendarModel CalendarModel;
+	/**
+	 * currentDate()
+	 * sets today's date
+	 */
+	public void currentDate() 
+	{
+		int year = GregorianCalendar.YEAR;
+		int month = GregorianCalendar.MONTH;
+		int day = GregorianCalendar.DAY_OF_MONTH;
+		gc.set(year, Calendar.getInstance().get(year));
+		gc.set(month, Calendar.getInstance().get(month));
+		gc.set(day, Calendar.getInstance().get(day));
+	}
 
+	/**
+	 * currentDay()
+	 * returns current day
+	 */
+	public String currentDay() 
+	{
+		int a = GregorianCalendar.DAY_OF_WEEK;
+		return daysOfMonth[gc.get(a)];
+	}
+
+	/**
+	 * setCalendar() sets date
+	 * @param : year, month, day
+	 */
+	public void setCalendar(int y, int m, int d)
+	{
+		gc = new GregorianCalendar(y, m, d);
+	}
+	/**
+	 * getCalendarModel()
+	 * @return CalendarModel
+	 */
+	public CalendarModel getCalendarModel(){
+		return CalendarModel;
+	}
 }

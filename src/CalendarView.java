@@ -14,9 +14,26 @@ import java.util.TreeMap;
  * functional buttons related to Calendar
  */
 public class CalendarView extends JPanel {
+	
+	
+	////////////////////////////
+	////View for the left side// 
+	///////of the screen////////
+	////////////////////////////
+	
+	
 //****class does not hold the day view****//
 	
-	
+    private CalendarController eventController;
+    private JPanel month;
+    private ArrayList<JLabel> days;
+    private JLabel Heading;
+    private ArrayList<JLabel> weeks;
+    private JButton previousDayButton;
+    private JButton nextDayButton;
+    private JButton createButton;
+    private JButton quitButton;
+    private JButton deleteButton;
 	
     public final static String[] months = {
         "January", "February", "March", "April", "May", "June",
@@ -279,15 +296,6 @@ public class CalendarView extends JPanel {
         }
         }
     }
-    private CalendarController eventController;
-    private JPanel month;
-    private ArrayList<JLabel> days;
-    private JLabel Heading;
-    private ArrayList<JLabel> weeks;
-    private JButton previousDayButton;
-    private JButton nextDayButton;
-    private JButton createButton;
-    private JButton quitButton;
-    private JButton deleteButton;
+
 }
 

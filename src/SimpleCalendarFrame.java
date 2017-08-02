@@ -25,7 +25,19 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         CalendarModel = new CalendarModel();
 
         DayView = new DayView(CalendarModel);
-        rightPanel = new JPanel();
+       
+        rightPanel = new JPanel(new BorderLayout());
+        JPanel rightChoicePanel = new JPanel(new FlowLayout());
+       
+        JButton dayChoice = new JButton("Day");
+        JButton weekChoice = new JButton("Week");
+        JButton monthChoice = new JButton("Month");
+        rightChoicePanel.add(dayChoice);
+        rightChoicePanel.add(weekChoice);
+        
+        
+        rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
+       
         CalendarModel.addChangeListener(this);
 
         eventController = new CalendarController(CalendarModel);
@@ -41,7 +53,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
    
         left.add(p, BorderLayout.CENTER);
 
-        rightPanel.setLayout(new BorderLayout());
+        
 
         setLayout(new BorderLayout());
         add(left, BorderLayout.WEST);
