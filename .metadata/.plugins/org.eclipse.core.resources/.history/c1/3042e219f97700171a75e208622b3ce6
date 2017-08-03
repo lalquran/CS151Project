@@ -1,0 +1,4 @@
+
+public interface ViewOption {
+	void show(int y, int m, int d);
+}

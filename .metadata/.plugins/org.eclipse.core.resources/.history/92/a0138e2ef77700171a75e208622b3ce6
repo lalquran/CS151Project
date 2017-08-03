@@ -1,0 +1,150 @@
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+
+public class SimpleCalendarFrame extends JFrame implements ChangeListener {
+
+
+	private CalendarController eventController;
+	private CalendarModel CalendarModel;
+	//day view is the right side of the panel
+	private DayView DayView;
+	private MonthView MonthView;
+	final JPanel rightPanel;
+	private JPanel lastView = new JPanel();
+	private JPanel rightView = new JPanel();
+
+
+	/**
+	 * CalendarFrame constructor creates a CalendarFrame object
+	 *
+	 */
+	public SimpleCalendarFrame() throws IOException
+	{
+
+		//has the day view
+		CalendarModel = new CalendarModel();
+
+		DayView = new DayView(CalendarModel);
+
+		rightPanel = new JPanel(new BorderLayout());
+		JPanel rightChoicePanel = new JPanel(new FlowLayout());
+
+		JButton dayChoice = new JButton("Day");
+		JButton weekChoice = new JButton("Week");
+		JButton monthChoice = new JButton("Month");
+		JButton fourDaysChoice = new JButton("4 Days");
+		JButton agendaChoice = new JButton("Agenda");
+		rightChoicePanel.add(dayChoice);
+		rightChoicePanel.add(weekChoice);
+		rightChoicePanel.add(monthChoice);
+		rightChoicePanel.add(fourDaysChoice);
+		rightChoicePanel.add(agendaChoice);
+
+
+
+
+		rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
+
+		CalendarModel.addChangeListener(this);
+
+		eventController = new CalendarController(CalendarModel);
+		eventController.set(DayView);
+
+
+
+		final CalendarView calendar = new CalendarView(eventController, CalendarModel);
+		DayView.setCalendar(calendar);
+		MonthView = new MonthView(eventController, CalendarModel, calendar);
+		JPanel left = new JPanel();
+		left.setLayout(new BorderLayout());
+
+		JPanel p = new JPanel(new FlowLayout());
+		p.add(calendar);
+		calendar.setPreferredSize(new Dimension(300, 300));
+
+		left.add(p, BorderLayout.CENTER);
+
+		setLayout(new BorderLayout());
+		add(left, BorderLayout.WEST);
+		add(rightPanel, BorderLayout.CENTER);
+		setTitle("CALENDAR");
+
+		rightPanel.add(DayView, BorderLayout.CENTER);
+		rightPanel.validate();
+		eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+		rightPanel.repaint();
+
+		dayChoice.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightPanel.remove(rightView);
+				rightPanel.add(DayView, BorderLayout.CENTER);
+				add(rightPanel);
+				lastView = rightView;
+				//
+				rightView = DayView;
+				rightPanel.validate();
+				calendar.previousDayButton.getActionListeners()[0] = new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						eventController.getLastDay();
+						eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+					}
+				};
+
+				calendar.nextDayButton.getActionListeners()[0] = new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						eventController.getUpcomingDay();
+						eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+					}
+				};
+				repaint();
+			}
+		});
+		monthChoice.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightPanel.remove(rightView);
+				rightPanel.add(MonthView, BorderLayout.CENTER);
+				add(rightPanel);
+				lastView = rightView;
+				rightView = MonthView;
+				rightPanel.validate();
+				calendar.previousDayButton.getActionListeners()[0] = new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						eventController.getLastMonth();
+						eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+					}
+					
+				};
+				System.out.println(calendar.nextDayButton.getActionListeners().length);
+				calendar.nextDayButton.getActionListeners()[0] = new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						eventController.getUpcomingMonth();
+						eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+					}
+				};
+				
+				repaint();
+			}
+		});
+}
+
+/**
+ * stateChanged() repaints ViewOption
+ * @param: CalendarModel
+ */
+public void stateChanged(ChangeEvent e) 
+{
+	rightPanel.remove(lastView);
+	rightPanel.add(rightView, BorderLayout.CENTER);
+	rightPanel.validate();
+	rightPanel.repaint();
+	this.repaint();
+}
+}

@@ -1,0 +1,8 @@
+
+public class ViewController {
+	public ViewOption[] views= new ViewOption[5];
+	public ViewController(){
+		;
+	
+	}
+}
