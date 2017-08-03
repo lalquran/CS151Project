@@ -13,23 +13,29 @@ import java.util.TreeMap;
  * CalendarView class displays the GUI calendar and provides
  * functional buttons related to Calendar
  */
-public class MonthView extends JPanel implements ViewOption {
+public class CalendarView extends JPanel {
 
 
-	/////////////////////////////
-	////View option for the//////
-	////right side of the screen//
-	/////////////////////////////
+	////////////////////////////
+	////View for the left side// 
+	///////of the screen////////
+	////////////////////////////
 
-	public boolean currentView = false;
-	public CalendarView calendarView;
-	private CalendarController eventController;
-	public CalendarModel calendarModel;
+
+	//****class does not hold the day view****//
+
+	public CalendarController eventController;
 	private JPanel month;
 	private ArrayList<JLabel> days;
 	private JLabel Heading;
 	private ArrayList<JLabel> weeks;
-	public String option = "MonthView";
+	public JButton previousDayButton;
+	public JButton nextDayButton;
+	private JButton createButton;
+	private JButton quitButton;
+	private JButton deleteButton;
+	public JPanel changePanel = new JPanel(new FlowLayout());
+
 	public final static String[] months = {
 			"January", "February", "March", "April", "May", "June",
 			"July", "August", "September", "October", "November", "December"
@@ -39,16 +45,82 @@ public class MonthView extends JPanel implements ViewOption {
 	 * CalendarView constructor with controller and model parameters
 	 * @param: controller, events
 	 */
-	MonthView(CalendarController controller,CalendarModel model ,CalendarView view)
+	CalendarView(CalendarController controller, final CalendarModel events)
 	{
-		calendarModel = model;
-		calendarView = view;
 		eventController = controller;
-
 		month = new JPanel();
 		month.setLayout(new GridLayout(0, 7));
 		days = new ArrayList<JLabel>();
 		Heading = new JLabel();
+
+		previousDayButton = new JButton("<");
+		addButtonActionListener(previousDayButton);
+		nextDayButton = new JButton(">");
+		addButtonActionListener(nextDayButton);
+
+
+		createButton = new JButton("CREATE EVENT");
+		createButton.setBackground(Color.BLUE);
+		createButton.setForeground(Color.WHITE);
+		createButton.setOpaque(true);
+		createButton.setBorderPainted(false);
+
+		quitButton = new JButton("Quit Calendar");
+		quitButton.setBackground(Color.RED);
+		quitButton.setForeground(Color.BLACK);
+		quitButton.setOpaque(true);
+		quitButton.setBorderPainted(false);
+
+		deleteButton = new JButton("DELETE EVENT");
+		deleteButton.setBackground(Color.DARK_GRAY);
+		deleteButton.setForeground(Color.WHITE);
+		deleteButton.setOpaque(true);
+		deleteButton.setBorderPainted(false);
+
+
+		/**
+		 * actionListener for quit button
+		 */
+		quitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CalendarModel.saveEventsToTxtFile();
+				System.exit(0);	
+			}
+		});
+
+		/**
+		 * actionListener for create button
+		 */
+		createButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreateEventView m = new CreateEventView(events, eventController);
+				m.setSize(550, 200);
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				int a = d.width;
+				int b = d.height;
+				m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
+				//repaints
+				month();
+				eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+
+			}
+		});
+
+
+		/**
+		 * actionListener for delete button
+		 */
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				CalendarModel.deleteEvent();
+				//repaints
+				month();
+				eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+			}
+		});
+
+		changePanel.add(previousDayButton);
+		changePanel.add(nextDayButton);
 
 		weeks = new ArrayList<JLabel>();
 
@@ -62,11 +134,18 @@ public class MonthView extends JPanel implements ViewOption {
 
 		setLayout(new BorderLayout());
 
+		JPanel tempP = new JPanel(new FlowLayout());
+		tempP.add(createButton);
+		tempP.add(deleteButton);
 
-		addButtonActionListener(calendarView.nextDayButton);
-		addButtonActionListener(calendarView.previousDayButton);
+		JPanel topP = new JPanel(new BorderLayout());
+		topP.add(tempP, BorderLayout.NORTH);
+		topP.add(Heading, BorderLayout.WEST);
+		topP.add(changePanel, BorderLayout.EAST);
+		topP.add(quitButton, BorderLayout.SOUTH);
+
+		add(topP, BorderLayout.NORTH);
 		add(month, BorderLayout.CENTER);
-		add(Heading,BorderLayout.NORTH);
 		month();
 	}
 
@@ -83,9 +162,21 @@ public class MonthView extends JPanel implements ViewOption {
 				JLabel tempL = new JLabel(s.substring(1), JLabel.CENTER);
 				days.add(tempL);
 			} else {
+
+				if (Integer.parseInt(s) == eventController.calendar().get(Calendar.DATE))
+				{
+					int a = JLabel.CENTER;
+					JLabel tempL = new JLabel(s, a);
+					tempL.setBorder(BorderFactory.createLineBorder(Color.gray));
+					days.add(tempL);
+
+
+				} else {
+
 					JLabel tempL = new JLabel(s, JLabel.CENTER);
 					Font f = tempL.getFont();
 					days.add(tempL);
+				}
 			}
 		}
 		for (JLabel a : weeks) {
@@ -98,7 +189,7 @@ public class MonthView extends JPanel implements ViewOption {
 			month.add(b);
 		}
 
-		Heading.setText("		   	" + months[eventController.getMonth()] + " " + eventController.getYear());
+		Heading.setText(months[eventController.getMonth()] + " " + eventController.getYear());
 		day();
 		month.validate();
 		month.repaint();
@@ -133,6 +224,9 @@ public class MonthView extends JPanel implements ViewOption {
 		calendar.set(GregorianCalendar.DAY_OF_MONTH, c);
 		return array;
 	}
+
+
+
 	/**
 	 * day() helps month populate calendar as well as highlights days which have an event
 	 */
@@ -162,27 +256,14 @@ public class MonthView extends JPanel implements ViewOption {
 
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								
 								eventController.setCalendar(y, m, Integer.parseInt(a.getText()));
 								month();
 								eventController.get().view(y, m, Integer.parseInt(a.getText()));
-								CreateEventView m = new CreateEventView(calendarModel, eventController);
-								m.setSize(550, 200);
-								Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-								int a = d.width;
-								int b = d.height;
-								m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
-								//repaints
-								month();
-								eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
-
-							
 							}
-
-
+							
 							@Override
 							public void mouseEntered(MouseEvent e) {
-								a.setBackground(Color.GRAY);
+								//a.setBackground(Color.GRAY);
 							}
 							@Override
 							public void mouseExited(MouseEvent e) {
@@ -202,7 +283,10 @@ public class MonthView extends JPanel implements ViewOption {
 		}
 	}
 
-
+	/**
+	 * actionListener for incrementing/decrementing the day view
+	 * @param button
+	 */
 	private void addButtonActionListener(final JButton button) {
 
 		button.addActionListener(
@@ -210,48 +294,22 @@ public class MonthView extends JPanel implements ViewOption {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 
-						if (button.getText().equals("<") && currentView == true)
+						if (button.getText().equals("<"))
 						{
-
-							eventController.getLastMonth();
-							eventController.getUpcomingDay();
+							eventController.getLastDay();
 							eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 							month();
-							
 						}
 						else 
 						{
-							if(currentView == true){
-
-								eventController.getUpcomingMonth();
-								eventController.getLastDay();
-								eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
-								month();
-							}
+							eventController.getUpcomingDay();
+							eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+						month();
 						}
-
+						
 					}
 				});
 	}
 
-	/**
-	 * headerDate() sets the date panel header
-	 * @param d
-	 */
-	private void headerDate(String d) {
-		this.Heading.setText(d);
-	}
-
-	@Override
-	public void view(int y, int m, int d) {
-		// TODO Auto-generated method stub
-
-	}
-	public void selectDay(String s){
-		int a = JLabel.CENTER;
-		JLabel tempL = new JLabel(s, a) ;
-		tempL.setBorder(BorderFactory.createLineBorder(Color.gray));
-		days.add(tempL);
-	}
 }
 

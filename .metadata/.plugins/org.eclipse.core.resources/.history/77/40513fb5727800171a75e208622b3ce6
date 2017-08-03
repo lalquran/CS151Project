@@ -83,9 +83,17 @@ public class MonthView extends JPanel implements ViewOption {
 				JLabel tempL = new JLabel(s.substring(1), JLabel.CENTER);
 				days.add(tempL);
 			} else {
+
+				if (Integer.parseInt(s) == eventController.calendar().get(Calendar.DATE))
+				{
+					//selectDay(s);
+
+				} else {
+
 					JLabel tempL = new JLabel(s, JLabel.CENTER);
 					Font f = tempL.getFont();
 					days.add(tempL);
+				}
 			}
 		}
 		for (JLabel a : weeks) {
@@ -186,16 +194,7 @@ public class MonthView extends JPanel implements ViewOption {
 							}
 							@Override
 							public void mouseExited(MouseEvent e) {
-								if(events!=null)
-									if(events.size() == 0)
-										a.setBackground(Color.WHITE);
-									else
-										a.setBackground(Color.YELLOW);
-								else
-									a.setBackground(Color.WHITE);
-								
-									
-										
+								a.setBackground(Color.WHITE);
 							}
 						});
 			}

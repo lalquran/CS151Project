@@ -265,10 +265,18 @@ public class CalendarView extends JPanel {
 							public void mouseEntered(MouseEvent e) {
 								a.setBackground(Color.GRAY);
 							}
-							
 							@Override
 							public void mouseExited(MouseEvent e) {
-								a.setBackground(Color.WHITE);
+								if(events!=null)
+									if(events.size() == 0)
+										a.setBackground(Color.WHITE);
+									else
+										a.setBackground(Color.YELLOW);
+								else
+									a.setBackground(Color.WHITE);
+								
+									
+										
 							}
 						});
 			}
