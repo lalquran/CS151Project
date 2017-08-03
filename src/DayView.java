@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,7 +15,7 @@ public class DayView extends JPanel{
 	///////////////////////////////////////
 	//Right side of the Application frame//
 	///////////////////////////////////////
-	
+	private CalendarView calendarView;
 	private JLabel date;
     private JScrollPane p;
     private JTable leftTable, rightTable;
@@ -37,6 +39,7 @@ public class DayView extends JPanel{
     * @param: events
     */
     public DayView(CalendarModel events) throws IOException {
+    	
         date = new JLabel();
         color = new Color(152, 217, 233);
         p2 = new JPanel(new BorderLayout());
@@ -204,8 +207,33 @@ public class DayView extends JPanel{
     public CalendarModel getModel(){
         return calendarModelEvents;
     }
-
-
+/*
+    public void changePrevNextButtons(){
+    	calendarView.previousDayButton.removeAll();
+    	calendarView.nextDayButton.removeAll(); 
+    	
+    	calendarView.previousDayButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				calendarView.eventController.getLastDay();
+                calendarView.eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+			}
+        	
+        });
+        
+        calendarView.nextDayButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				eventController.getUpcomingDay();
+                eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+			}
+        	
+        });
+    }
     
+    */
+    public void setCalendar(CalendarView view){
+    	calendarView = view;
+    }
 }
 

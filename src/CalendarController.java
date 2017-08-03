@@ -103,6 +103,16 @@ public class CalendarController {
 		int a = GregorianCalendar.DAY_OF_MONTH;
 		gc.add(a, 1);
 	}
+	public void getUpcomingMonth(){
+		int a = GregorianCalendar.MONTH;
+		gc.add(a, 1);
+		
+	}
+	public void getLastMonth() 
+	{
+		int a = GregorianCalendar.MONTH;
+		gc.add(a, -1);
+	}
 
 	public  DayView getDayView(){
 		return DayView;

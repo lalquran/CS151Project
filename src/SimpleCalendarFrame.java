@@ -56,9 +56,11 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         eventController = new CalendarController(CalendarModel);
         eventController.set(DayView);
 
-        MonthView = new MonthView(eventController, CalendarModel);
+        
         
         final CalendarView calendar = new CalendarView(eventController, CalendarModel);
+        DayView.setCalendar(calendar);
+        MonthView = new MonthView(eventController, CalendarModel, calendar);
         JPanel left = new JPanel();
         left.setLayout(new BorderLayout());
 
@@ -67,8 +69,6 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         calendar.setPreferredSize(new Dimension(300, 300));
    
         left.add(p, BorderLayout.CENTER);
-
-        
 
         setLayout(new BorderLayout());
         add(left, BorderLayout.WEST);
@@ -79,11 +79,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         rightPanel.validate();
         eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
         rightPanel.repaint();
-        
-        
-        
-        
-        
+       
         dayChoice.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -91,12 +87,15 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				rightPanel.add(DayView, BorderLayout.CENTER);
 				add(rightPanel);
 				lastView = rightView;
+				//
 				rightView = DayView;
 				rightPanel.validate();
+				//DayView.changePrevNextButtons();
+				
+				
 				repaint();
 			}
         });
-        
         monthChoice.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,21 +105,21 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				lastView = rightView;
 				rightView = MonthView;
 				rightPanel.validate();
+				
+				MonthView.addButtonActionListener(MonthView.calendarView.previousDayButton);
+				MonthView.addButtonActionListener(MonthView.calendarView.nextDayButton);
 				repaint();
 			}
         });
     }
 
-  
- 
     /**
-     * stateChanged() repaints dayView
+     * stateChanged() repaints ViewOption
      * @param: CalendarModel
      */
     public void stateChanged(ChangeEvent e) 
     {
     	rightPanel.remove(lastView);
-    	
         rightPanel.add(rightView, BorderLayout.CENTER);
         rightPanel.validate();
         rightPanel.repaint();

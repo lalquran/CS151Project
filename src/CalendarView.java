@@ -24,13 +24,13 @@ public class CalendarView extends JPanel {
 	
 //****class does not hold the day view****//
 	
-    private CalendarController eventController;
+    public CalendarController eventController;
     private JPanel month;
     private ArrayList<JLabel> days;
     private JLabel Heading;
     private ArrayList<JLabel> weeks;
-    private JButton previousDayButton;
-    private JButton nextDayButton;
+    public JButton previousDayButton;
+    public JButton nextDayButton;
     private JButton createButton;
     private JButton quitButton;
     private JButton deleteButton;
@@ -54,8 +54,9 @@ public class CalendarView extends JPanel {
         Heading = new JLabel();
      
         previousDayButton = new JButton("<");
+        addButtonActionListener(previousDayButton);
         nextDayButton = new JButton(">");
-
+        addButtonActionListener(nextDayButton);
 
 
         createButton = new JButton("CREATE EVENT");
@@ -117,9 +118,6 @@ public class CalendarView extends JPanel {
         		eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
         	}
         });
-        addButtonActionListener(previousDayButton);
-        addButtonActionListener(nextDayButton);
-
         
         changePanel.add(previousDayButton);
         changePanel.add(nextDayButton);
@@ -226,30 +224,7 @@ public class CalendarView extends JPanel {
         return array;
     }
 
-    /**
-     * actionListener for incrementing/decrementing the day view
-     * @param button
-     */
-    private void addButtonActionListener(final JButton button) {
-        button.addActionListener(
-                new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	
-                if (button.getText().equals("<"))
-                {
-                    eventController.getLastDay();
-                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
-                }
-                else 
-                {
-                    eventController.getUpcomingDay();
-                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
-                }
-                month();
-            }
-        });
-    }
+    
 
     /**
      * day() helps month populate calendar as well as highlights days which have an event
@@ -298,5 +273,31 @@ public class CalendarView extends JPanel {
         }
     }
 
+    /**
+     * actionListener for incrementing/decrementing the day view
+     * @param button
+     */
+    private void addButtonActionListener(final JButton button) {
+    	
+        button.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	
+                if (button.getText().equals("<"))
+                {
+                    eventController.getLastDay();
+                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+                }
+                else 
+                {
+                    eventController.getUpcomingDay();
+                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+                }
+                month();
+            }
+        });
+    }
+   
 }
 
