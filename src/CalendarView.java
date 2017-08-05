@@ -34,6 +34,7 @@ public class CalendarView extends JPanel {
 	private JButton createButton;
 	private JButton quitButton;
 	private JButton deleteButton;
+	
 	public JPanel changePanel = new JPanel(new FlowLayout());
 
 	public final static String[] months = {
@@ -53,6 +54,7 @@ public class CalendarView extends JPanel {
 		days = new ArrayList<JLabel>();
 		Heading = new JLabel();
 
+		
 		previousDayButton = new JButton("<");
 		addButtonActionListener(previousDayButton);
 		nextDayButton = new JButton(">");
@@ -77,7 +79,8 @@ public class CalendarView extends JPanel {
 		deleteButton.setOpaque(true);
 		deleteButton.setBorderPainted(false);
 
-
+		
+		
 		/**
 		 * actionListener for quit button
 		 */
@@ -101,7 +104,7 @@ public class CalendarView extends JPanel {
 				m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
 				//repaints
 				month();
-				eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+				eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
 
 			}
 		});
@@ -115,7 +118,7 @@ public class CalendarView extends JPanel {
 				CalendarModel.deleteEvent();
 				//repaints
 				month();
-				eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+				eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
 			}
 		});
 
@@ -144,6 +147,9 @@ public class CalendarView extends JPanel {
 		topP.add(changePanel, BorderLayout.EAST);
 		topP.add(quitButton, BorderLayout.SOUTH);
 
+		
+		
+		
 		add(topP, BorderLayout.NORTH);
 		add(month, BorderLayout.CENTER);
 		month();
@@ -163,7 +169,7 @@ public class CalendarView extends JPanel {
 				days.add(tempL);
 			} else {
 
-				if (Integer.parseInt(s) == eventController.calendar().get(Calendar.DATE))
+				if (Integer.parseInt(s) == eventController.getDate().get(Calendar.DATE))
 				{
 					int a = JLabel.CENTER;
 					JLabel tempL = new JLabel(s, a);
@@ -203,7 +209,7 @@ public class CalendarView extends JPanel {
 
 		ArrayList<String> array = new ArrayList<>();
 		int c = eventController.getDay();
-		GregorianCalendar calendar = eventController.calendar();
+		GregorianCalendar calendar = eventController.getDate();
 
 		GregorianCalendar k = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
 		int blanks = k.get(Calendar.DAY_OF_WEEK)-1;
@@ -244,7 +250,7 @@ public class CalendarView extends JPanel {
 			if(a.getText().matches("\\d+"))
 			{
 
-				TreeMap<String, Event> events =  eventController.get().getModel().getMyEvents(eventController.date2MMYYDD((m+1)+"/"+a.getText()+"/"+y));
+				TreeMap<String, Event> events =  eventController.getDayView().getModel().getMyEvents(eventController.date2MMYYDD((m+1)+"/"+a.getText()+"/"+y));
 				if(events!=null)
 					if(events.size() != 0)
 						a.setBackground(Color.yellow);
@@ -258,12 +264,13 @@ public class CalendarView extends JPanel {
 							public void mouseClicked(MouseEvent e) {
 								eventController.setCalendar(y, m, Integer.parseInt(a.getText()));
 								month();
-								eventController.get().view(y, m, Integer.parseInt(a.getText()));
+								eventController.getDayView().view(y, m, Integer.parseInt(a.getText()));
 							}
 							
 							@Override
 							public void mouseEntered(MouseEvent e) {
-								a.setBackground(Color.GRAY);
+								
+										a.setBackground(Color.GRAY);
 							}
 							@Override
 							public void mouseExited(MouseEvent e) {
@@ -297,13 +304,13 @@ public class CalendarView extends JPanel {
 						if (button.getText().equals("<"))
 						{
 							eventController.getLastDay();
-							eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+							eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 							month();
 						}
 						else 
 						{
 							eventController.getUpcomingDay();
-							eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+							eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 						month();
 						}
 						

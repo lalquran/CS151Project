@@ -1,0 +1,54 @@
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
+
+
+
+public class FourDayView extends JPanel implements ViewOption {
+	
+	public boolean currentView = false;
+	public CalendarView calendarView;
+	private CalendarController eventController;
+	public CalendarModel calendarModel;
+	private JLabel Heading;
+	private ArrayList<DayView> fourDays;
+	
+	public final static String[] daysOfMonth = {
+			"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+	};
+	public final static String[] months = {
+			"January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December"
+	};
+
+	
+	FourDayView(CalendarController controller,CalendarModel model ,CalendarView view)
+	{
+		calendarModel = model;
+		calendarView = view;
+		eventController = controller;
+
+		
+		Heading = new JLabel();
+
+		
+		setLayout(new BorderLayout());
+		eventController.getDate();
+
+
+	}
+	
+	
+	
+	@Override
+	public void view(int y, int m, int d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

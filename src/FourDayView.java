@@ -1,0 +1,303 @@
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * DayView class is a JPanel with strings of times and JTables
+ */
+public class FourDayView extends JPanel implements ViewOption{
+
+	///////////////////////////////////////
+	//Right side of the Application frame//
+	///////////////////////////////////////
+	public boolean currentView = true;
+	public CalendarView calendarView;
+	private JLabel date;
+	private JScrollPane p;
+	private JTable leftTable, rightTable;
+	private JPanel p2;
+	private CalendarController eventController;
+	private CalendarModel calendarModel;
+	private Color color;
+	public String option = "FourDayView";
+	public ArrayList<DayView> days;
+	/**
+	 * array of time strings
+	 */
+	public static final String[] times = {
+			"12 am", "1 am", "2 am", "3 am", "4 am", "5 am", "6 am", "7 am", "8 am", "9 am", "10 am", "11 am",
+			"12 pm", "1 pm", "2 pm", "3 pm", "4 pm", "5 pm", "6 pm", "7 pm", "8 pm", "9 pm", "10 pm",
+			"11 pm" 
+	};
+
+
+	/**
+	 * DayView constructor with CalendarModel parameter
+	 * @param: events
+	 */
+	public FourDayView(CalendarModel events) throws IOException {
+		days = new ArrayList<>();
+		date = new JLabel();
+		color = new Color(152, 217, 233);
+		p2 = new JPanel(new BorderLayout());
+		p = new JScrollPane(p2);
+		eventController = new CalendarController();
+		this.calendarModel = events;
+		this.setLayout(new BorderLayout());
+		//today();
+
+	}
+
+	/**
+	 * displayTimes() method accounts for displaying times 
+	 * in column of day view, and creating grid
+	 * @param: ArrayList events
+	 */
+	private void displayTimes(TreeMap<String, Event> events)
+	{
+		Object[][] rowData2D = new Object[24][1];
+		for (int i = 0; i < 24; i++) {
+			rowData2D[i][0] = times[i];
+		}
+		Object[] columnNames = {""};
+
+		if (events != null)
+		{
+			final int[] h = new int[24];
+
+			leftTable = new JTable(rowData2D, columnNames)
+			{
+				@Override
+				public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
+					Component c = super.prepareRenderer(r, i, ic);
+
+					if (h[i] == 1) {
+						c.setBackground(color);
+					} else {
+						c.setBackground(Color.white);
+					}
+					return c;
+				}
+			};
+		} 
+		else 
+		{
+			leftTable = new JTable(rowData2D, columnNames);
+		}
+
+		leftTable.setTableHeader(null);
+		leftTable.setRowHeight(40);
+		
+		leftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		leftTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+		leftTable.setGridColor(Color.black);
+		leftTable.setEnabled(false);
+
+	}
+
+	/**
+	 * format() method creates grid style JTable
+	 * @param: ArrayList events
+	 */
+	private void formatGrids(TreeMap<String, Event> events)
+	{
+		Object[][] o = new Object[24][1];
+		Object[] t = {""};
+
+		if (events != null) {
+			final int[] h = new int[24];
+			for (Map.Entry<String, Event> a : events.entrySet())
+			{
+				int a1 = Event.getHour(a.getValue().getStartTime());
+				int b1 = Event.getHour(a.getValue().getEndTime());
+				int start = a1;
+				int end = b1 - 1 ;
+
+				o[start][0] = a.getValue().getTitle();
+
+				while (start <= end) {
+					h[start++] = 1;
+				}
+			}
+
+			rightTable = new JTable(o, t)
+			{
+				@Override
+				public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
+					Component comp = super.prepareRenderer(r, i, ic);
+
+					if (h[i] == 1) {
+						comp.setBackground(Color.PINK);
+					} else {
+						comp.setBackground(Color.white);
+					}
+					return comp;
+				}
+			};
+		} 
+		else 
+		{
+			rightTable = new JTable(o, t);
+
+		}
+		rightTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				// create event view
+				CreateEventView m = new CreateEventView(calendarModel, eventController);
+				m.setSize(550, 200);
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				int a = d.width;
+				int b = d.height;
+				m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
+				//repaints\
+				if(eventController.littleCalendar != null){
+					eventController.littleCalendar.month();
+					eventController.getFourDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+				}
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		rightTable.setTableHeader(null);
+		rightTable.setRowHeight(40);
+	
+		rightTable.setGridColor(Color.black);
+		rightTable.setEnabled(false);
+	}
+
+	/**
+	 * Shows the entire Right Side
+	 * show()
+	 * @param: ArrayList events
+	 */
+	private void show(TreeMap<String, Event> events) {
+
+		this.invalidate();
+		p2.removeAll();
+
+		displayTimes(events);
+		
+		formatGrids(events);
+		String a = eventController.currentDay();
+		int b = eventController.getMonth();
+		int c = eventController.getDay();
+		headerDate(a + " " + (b+1) + "/" + c);
+
+		p2.add(leftTable, BorderLayout.WEST);
+		p2.add(rightTable, BorderLayout.CENTER);
+
+		this.add(date, BorderLayout.NORTH);
+		this.add(p, BorderLayout.CENTER);
+		this.validate();
+		this.repaint();
+	}
+
+	/**
+	 * headerDate() sets the date panel header
+	 * @param d
+	 */
+	private void headerDate(String d) {
+		this.date.setText(d);
+	}
+
+	/**
+	 * today() method
+	 * sets current date
+	 */
+	public void today() 
+	{
+		eventController.currentDate();
+		System.out.println("today: "+eventController.date2MMYYDD());
+
+	}
+
+	/**
+	 * view() method
+	 * @param: year, month and day
+	 */
+	public void view(int y, int m, int d) {
+		for(int i = 0; i < 4; i++){
+			eventController.setCalendar(y, m, d + i); //return gc
+			System.out.println("view: "+eventController.date2MMYYDD());
+			//Show right side
+			System.out.println("Entered" + i);
+			show(calendarModel.getMyEvents(eventController.date2MMYYDD()));
+		}
+
+	}
+	
+
+	public CalendarModel getModel(){
+		return calendarModel;
+	}
+
+
+	public void setCalendar(CalendarView view){
+		calendarView = view;
+	}
+
+	/*
+	private void addButtonActionListener(final JButton button) {
+
+        button.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (button.getText().equals("<") && currentView == true)
+                {
+
+                    eventController.getLastDay();
+                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+                }
+                else 
+                {
+                	if(currentView == true){
+                		eventController.getUpcomingDay();
+                		eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+
+                	}
+                }
+                //month();
+            }
+        });
+	}*/
+}
+

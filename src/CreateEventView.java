@@ -85,7 +85,8 @@ class CreateEventView extends JFrame implements ActionListener
             if(flag){
                 this.setVisible(false);
                 this.dispose();
-                eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+                if(eventController.getDayView() != null)
+                	eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
                 model.update();
             }else{
             	error.setText("Error, Please indicate a valid time: ");

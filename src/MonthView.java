@@ -16,10 +16,10 @@ import java.util.TreeMap;
 public class MonthView extends JPanel implements ViewOption {
 
 
-	/////////////////////////////
-	////View option for the//////
+	//////////////////////////////
+	////View option for the///////
 	////right side of the screen//
-	/////////////////////////////
+	//////////////////////////////
 
 	public boolean currentView = false;
 	public CalendarView calendarView;
@@ -83,9 +83,12 @@ public class MonthView extends JPanel implements ViewOption {
 				JLabel tempL = new JLabel(s.substring(1), JLabel.CENTER);
 				days.add(tempL);
 			} else {
-					JLabel tempL = new JLabel(s, JLabel.CENTER);
-					Font f = tempL.getFont();
-					days.add(tempL);
+				JLabel tempL = new JLabel(s, JLabel.CENTER);
+				Font f = tempL.getFont();
+				
+				//HIGHLIGHTS DAY
+				//tempL.setBorder(BorderFactory.createLineBorder(Color.gray));
+				days.add(tempL);
 			}
 		}
 		for (JLabel a : weeks) {
@@ -112,7 +115,7 @@ public class MonthView extends JPanel implements ViewOption {
 
 		ArrayList<String> array = new ArrayList<>();
 		int c = eventController.getDay();
-		GregorianCalendar calendar = eventController.calendar();
+		GregorianCalendar calendar = eventController.getDate();
 
 		GregorianCalendar k = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
 		int blanks = k.get(Calendar.DAY_OF_WEEK)-1;
@@ -150,7 +153,7 @@ public class MonthView extends JPanel implements ViewOption {
 			if(a.getText().matches("\\d+"))
 			{
 
-				TreeMap<String, Event> events =  eventController.get().getModel().getMyEvents(eventController.date2MMYYDD((m+1)+"/"+a.getText()+"/"+y));
+				TreeMap<String, Event> events =  eventController.getDayView().getModel().getMyEvents(eventController.date2MMYYDD((m+1)+"/"+a.getText()+"/"+y));
 				if(events!=null)
 					if(events.size() != 0)
 						a.setBackground(Color.yellow);
@@ -162,10 +165,12 @@ public class MonthView extends JPanel implements ViewOption {
 
 							@Override
 							public void mouseClicked(MouseEvent e) {
-								
+
 								eventController.setCalendar(y, m, Integer.parseInt(a.getText()));
 								month();
-								eventController.get().view(y, m, Integer.parseInt(a.getText()));
+								eventController.getDayView().view(y, m, Integer.parseInt(a.getText()));
+								
+								//create event view
 								CreateEventView m = new CreateEventView(calendarModel, eventController);
 								m.setSize(550, 200);
 								Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -174,15 +179,18 @@ public class MonthView extends JPanel implements ViewOption {
 								m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
 								//repaints
 								month();
-								eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+								eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
 
-							
+
 							}
 
 
 							@Override
 							public void mouseEntered(MouseEvent e) {
-								a.setBackground(Color.GRAY);
+								
+										a.setBackground(Color.GRAY);
+								
+
 							}
 							@Override
 							public void mouseExited(MouseEvent e) {
@@ -193,9 +201,9 @@ public class MonthView extends JPanel implements ViewOption {
 										a.setBackground(Color.YELLOW);
 								else
 									a.setBackground(Color.WHITE);
-								
-									
-										
+
+
+
 							}
 						});
 			}
@@ -215,9 +223,9 @@ public class MonthView extends JPanel implements ViewOption {
 
 							eventController.getLastMonth();
 							eventController.getUpcomingDay();
-							eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+							eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 							month();
-							
+
 						}
 						else 
 						{
@@ -225,7 +233,7 @@ public class MonthView extends JPanel implements ViewOption {
 
 								eventController.getUpcomingMonth();
 								eventController.getLastDay();
-								eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+								eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 								month();
 							}
 						}

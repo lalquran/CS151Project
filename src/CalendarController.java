@@ -12,6 +12,8 @@ public class CalendarController {
 	/////////////////////////
 	private DayView DayView;
 	public MonthView MonthView;
+	public FourDayView FourDayView;
+	public CalendarView littleCalendar;
 	private ViewOption viewOption;
 	private GregorianCalendar gc;
 	private CalendarModel CalendarModel;
@@ -43,29 +45,40 @@ public class CalendarController {
 	/**
 	 * calendar() returns GregorianCalendar object
 	 */
-	public GregorianCalendar calendar() 
+	public GregorianCalendar getDate() 
 	{
 		return gc;
 	}
 
 	/**
-	 * set() takes DayView parameter
+	 * setDayView() takes DayView parameter
 	 * @param: a DayView object
 	 */
-	public void set(DayView a)
+	public void setDayView(DayView a)
 	{
 		this.DayView = a;
+	}
+	
+	public void setMonthView(MonthView a)
+	{
+		this.MonthView = a;
+	}
+	public void setFourDayView(FourDayView a)
+	{
+		this.FourDayView = a;
 	}
 
 	/**
 	 * get()
 	 * return: DayView object
 	 */
-	public DayView get()
+	public DayView getDayView()
 	{
 		return this.DayView;
 	}
-
+	public FourDayView getFourDayView(){
+		return this.FourDayView;
+	}
 	/**
 	 * getMonth()
 	 * returns current month
@@ -116,9 +129,6 @@ public class CalendarController {
 		gc.add(a, -1);
 	}
 
-	public  DayView getDayView(){
-		return DayView;
-	}
 	/**
 	 * getLastDay()
 	 * decrements day
@@ -136,6 +146,17 @@ public class CalendarController {
 	public String date2MMYYDD(){
 		return  Event.modifyStringToSort(getMonth()+1+"/"+getDay()+"/"+getYear());
 	}
+	public String nextDate2MMYYDD(){
+		return  Event.modifyStringToSort(getMonth()+1+"/"+(getDay() + 1)+"/"+getYear());
+	}
+	
+	public String secondNextDate2MMYYDD(){
+		return  Event.modifyStringToSort(getMonth()+1+"/"+(getDay() + 2)+"/"+getYear());
+	}
+	public String thirdNextDate2MMYYDD(){
+		return  Event.modifyStringToSort(getMonth()+1+"/"+(getDay() + 3)+"/"+getYear());
+	}
+	
 
 	public String date2MMYYDD(String string){
 		return  Event.modifyStringToSort(string);
@@ -179,5 +200,8 @@ public class CalendarController {
 	 */
 	public CalendarModel getCalendarModel(){
 		return CalendarModel;
+	}
+	public void setLittleCalendar(CalendarView view){
+		littleCalendar = view;
 	}
 }

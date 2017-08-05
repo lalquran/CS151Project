@@ -1,0 +1,116 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+
+public class SmallDayView extends DayView {
+
+	private void formatGrids(TreeMap<String, Event> events)
+	{
+		Object[][] o = new Object[24][1];
+		Object[] t = {""};
+
+		if (events != null) {
+			final int[] h = new int[24];
+			for (Map.Entry<String, Event> a : events.entrySet())
+			{
+				int a1 = Event.getHour(a.getValue().getStartTime());
+				int b1 = Event.getHour(a.getValue().getEndTime());
+				int start = a1;
+				int end = b1 - 1 ;
+
+				o[start][0] = a.getValue().getTitle();
+
+				while (start <= end) {
+					h[start++] = 1;
+				}
+			}
+
+			rightTable = new JTable(o, t)
+			{
+				@Override
+				public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
+					Component comp = super.prepareRenderer(r, i, ic);
+
+					if (h[i] == 1) {
+						comp.setBackground(Color.PINK);
+					} else {
+						comp.setBackground(Color.white);
+					}
+					return comp;
+				}
+			};
+		} 
+		else 
+		{
+			rightTable = new JTable(o, t);
+
+		}
+		rightTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				// create event view
+				CreateEventView m = new CreateEventView(calendarModel, eventController);
+				m.setSize(550, 200);
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				int a = d.width;
+				int b = d.height;
+				m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
+				//repaints\
+				if(eventController.littleCalendar != null){
+					eventController.littleCalendar.month();
+					eventController.getFourDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+				}
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		rightTable.setTableHeader(null);
+		rightTable.setRowHeight(40);
+	
+		rightTable.setGridColor(Color.black);
+		rightTable.setEnabled(false);
+	}
+
+	
+}

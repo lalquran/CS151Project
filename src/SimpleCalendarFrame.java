@@ -15,7 +15,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 	//day view is the right side of the panel
 	private DayView DayView;
 	private MonthView MonthView;
+	private FourDayView FourDayView;
 	final JPanel rightPanel;
+	private JButton todayButton;
 	private JPanel lastView = new JPanel();
 	public JPanel rightView = new JPanel();
 
@@ -29,46 +31,52 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
 		
 		viewController = new ViewController();
-		
+		todayButton = new JButton("Today");
 		//has the day view
 		CalendarModel = new CalendarModel();
 
 		DayView = new DayView(CalendarModel);
-
+		FourDayView = new FourDayView(CalendarModel);
 		rightPanel = new JPanel(new BorderLayout());
 		JPanel rightChoicePanel = new JPanel(new FlowLayout());
 
 		JButton dayChoice = new JButton("Day");
 		JButton weekChoice = new JButton("Week");
 		JButton monthChoice = new JButton("Month");
-		JButton fourDaysChoice = new JButton("4 Days");
+		JButton fourDayChoice = new JButton("4 Days");
 		JButton agendaChoice = new JButton("Agenda");
 		rightChoicePanel.add(dayChoice);
 		rightChoicePanel.add(weekChoice);
 		rightChoicePanel.add(monthChoice);
-		rightChoicePanel.add(fourDaysChoice);
+		rightChoicePanel.add(fourDayChoice);
 		rightChoicePanel.add(agendaChoice);
 		rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
 
 		CalendarModel.addChangeListener(this);
-
+		
 		eventController = new CalendarController(CalendarModel);
-		eventController.set(DayView);
-
-
-
+		
+		
+		eventController.setDayView(DayView);
+		eventController.setFourDayView(FourDayView);
+		
 		final CalendarView calendar = new CalendarView(eventController, CalendarModel);
 		DayView.setCalendar(calendar);
+		eventController.setLittleCalendar(calendar);
 		MonthView = new MonthView(eventController,CalendarModel, calendar);
+		eventController.setMonthView(MonthView);
+		
 		JPanel left = new JPanel();
 		left.setLayout(new BorderLayout());
 
 		JPanel p = new JPanel(new FlowLayout());
 		p.add(calendar);
+		
+		
 		calendar.setPreferredSize(new Dimension(300, 300));
 
 		left.add(p, BorderLayout.CENTER);
-
+		left.add(todayButton, BorderLayout.NORTH);
 		setLayout(new BorderLayout());
 		add(left, BorderLayout.WEST);
 		add(rightPanel, BorderLayout.CENTER);
@@ -76,7 +84,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
 		rightPanel.add(DayView, BorderLayout.CENTER);
 		rightPanel.validate();
-		eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+		eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 		rightPanel.repaint();
 
 		//added views to view array here/////
@@ -84,12 +92,19 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 		viewController.add(MonthView);
 		////////////////////////////////////
 		
+		todayButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("TODAY");
+			}
+		});
 		
 		dayChoice.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DayView.currentView = true;
 				MonthView.currentView = false;
+				FourDayView.currentView = false;
+					
 				rightPanel.remove(rightView);
 				rightPanel.add(DayView, BorderLayout.CENTER);
 				add(rightPanel);
@@ -106,7 +121,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				rightPanel.remove(rightView);
 				DayView.currentView = false;
+				FourDayView.currentView = false;
 				MonthView.currentView = true;
+				
 				rightPanel.add(MonthView, BorderLayout.CENTER);
 				add(rightPanel);
 				lastView = rightView;
@@ -116,6 +133,31 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				
 			}
 		});
+		fourDayChoice.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightPanel.remove(rightView);
+				DayView.currentView = false;
+				MonthView.currentView = false;
+				FourDayView.currentView = true;
+				rightPanel.add(FourDayView, BorderLayout.CENTER);
+				add(rightPanel);
+				lastView = rightView;
+				rightView = FourDayView;
+				rightPanel.validate();
+				rightPanel.repaint();	
+				FourDayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+				//FourDayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay()+1);
+				//FourDayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay()+2);
+				//FourDayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay()+3);
+
+
+			
+			}
+		});
+
+		
+		
 }
 
 	

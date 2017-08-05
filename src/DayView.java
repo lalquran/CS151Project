@@ -3,6 +3,8 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,17 +14,18 @@ import java.util.TreeMap;
  */
 public class DayView extends JPanel implements ViewOption{
 
+	
 	///////////////////////////////////////
 	//Right side of the Application frame//
 	///////////////////////////////////////
-	public boolean currentView = true;
+		public boolean currentView = true;
 	public CalendarView calendarView;
 	private JLabel date;
 	private JScrollPane p;
 	private JTable leftTable, rightTable;
 	private JPanel p2;
-	private CalendarController calendarController;
-	private CalendarModel calendarModelEvents;
+	private CalendarController eventController;
+	private CalendarModel calendarModel;
 	private Color color;
 	public String option = "DayView";
 	/**
@@ -45,8 +48,8 @@ public class DayView extends JPanel implements ViewOption{
 		color = new Color(152, 217, 233);
 		p2 = new JPanel(new BorderLayout());
 		p = new JScrollPane(p2);
-		calendarController = new CalendarController();
-		this.calendarModelEvents = events;
+		eventController = new CalendarController();
+		this.calendarModel = events;
 		this.setLayout(new BorderLayout());
 		//today();
 
@@ -141,8 +144,55 @@ public class DayView extends JPanel implements ViewOption{
 		else 
 		{
 			rightTable = new JTable(o, t);
+			
 		}
+		rightTable.addMouseListener(new MouseListener(){
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				// create event view
+				CreateEventView m = new CreateEventView(calendarModel, eventController);
+				m.setSize(550, 200);
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				int a = d.width;
+				int b = d.height;
+				m.setLocation(a/2-m.getSize().width/2, b/2-m.getSize().height/2);
+				//repaints\
+				if(eventController.littleCalendar != null){
+					eventController.littleCalendar.month();
+					eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+				}
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+				
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+		});
 		rightTable.setTableHeader(null);
 		rightTable.setRowHeight(40);
 		rightTable.setGridColor(Color.black);
@@ -161,9 +211,9 @@ public class DayView extends JPanel implements ViewOption{
 
 		displayTimes(events);
 		formatGrids(events);
-		String a = calendarController.currentDay();
-		int b = calendarController.getMonth();
-		int c = calendarController.getDay();
+		String a = eventController.currentDay();
+		int b = eventController.getMonth();
+		int c = eventController.getDay();
 		headerDate(a + " " + (b+1) + "/" + c);
 
 		p2.add(leftTable, BorderLayout.WEST);
@@ -189,8 +239,8 @@ public class DayView extends JPanel implements ViewOption{
 	 */
 	public void today() 
 	{
-		calendarController.currentDate();
-		System.out.println("today: "+calendarController.date2MMYYDD());
+		eventController.currentDate();
+		System.out.println("today: "+eventController.date2MMYYDD());
 
 	}
 
@@ -199,45 +249,46 @@ public class DayView extends JPanel implements ViewOption{
 	 * @param: year, month and day
 	 */
 	public void view(int y, int m, int d) {
-		calendarController.setCalendar(y, m, d); //return gc
-		System.out.println("view: "+calendarController.date2MMYYDD());
+		eventController.setCalendar(y, m, d); //return gc
+		System.out.println("view: "+eventController.date2MMYYDD());
 		//Show right side
-		show(calendarModelEvents.getMyEvents(calendarController.date2MMYYDD()));
+		show(calendarModel.getMyEvents(eventController.date2MMYYDD()));
 	}
 
 	public CalendarModel getModel(){
-		return calendarModelEvents;
+		return calendarModel;
 	}
 
 
 	public void setCalendar(CalendarView view){
 		calendarView = view;
 	}
+	
+	/*
+	private void addButtonActionListener(final JButton button) {
 
-private void addButtonActionListener(final JButton button) {
-    	
         button.addActionListener(
                 new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	
+
                 if (button.getText().equals("<") && currentView == true)
                 {
-                	
-                    calendarController.getLastDay();
-                    calendarController.get().view(calendarController.getYear(), calendarController.getMonth(), calendarController.getDay());
+
+                    eventController.getLastDay();
+                    eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
                 }
                 else 
                 {
                 	if(currentView == true){
-                		calendarController.getUpcomingDay();
-                		calendarController.get().view(calendarController.getYear(), calendarController.getMonth(), calendarController.getDay());
-                
+                		eventController.getUpcomingDay();
+                		eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+
                 	}
                 }
                 //month();
             }
         });
-}
+	}*/
 }
 
