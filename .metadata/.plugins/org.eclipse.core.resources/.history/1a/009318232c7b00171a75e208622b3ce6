@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 
 public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
+	private ViewController viewController;
 	private CalendarController eventController;
 	private CalendarModel CalendarModel;
 	//day view is the right side of the panel
@@ -31,6 +32,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 	 */
 	public SimpleCalendarFrame() throws IOException
 	{
+
+		
+		viewController = new ViewController();
 		todayButton = new JButton("Today");
 		//has the day view
 		CalendarModel = new CalendarModel();
@@ -53,26 +57,26 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 		rightPanel.add(rightChoicePanel, BorderLayout.NORTH);
 
 		CalendarModel.addChangeListener(this);
-
+		
 		eventController = new CalendarController(CalendarModel);
-
-
+		
+		
 		eventController.setDayView(DayView);
 		eventController.setFourDayView(FourDayView);
-
+		
 		final CalendarView calendar = new CalendarView(eventController, CalendarModel);
 		DayView.setCalendar(calendar);
 		eventController.setLittleCalendar(calendar);
 		MonthView = new MonthView(eventController,CalendarModel, calendar);
 		eventController.setMonthView(MonthView);
-
+		
 		JPanel left = new JPanel();
 		left.setLayout(new BorderLayout());
 
 		JPanel p = new JPanel(new FlowLayout());
 		p.add(calendar);
-
-
+		
+		
 		calendar.setPreferredSize(new Dimension(300, 300));
 
 		left.add(p, BorderLayout.CENTER);
@@ -87,51 +91,33 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 		eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 		rightPanel.repaint();
 
-	
-
+		//added views to view array here/////
+		viewController.add(DayView);
+		viewController.add(MonthView);
+		////////////////////////////////////
+		
 		todayButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				System.out.println("TODAY");
-				GregorianCalendar today = new GregorianCalendar();
-				if(DayView.currentView){		
-					DayView.view(today.get(GregorianCalendar.YEAR), today.get(GregorianCalendar.MONTH), today.get(GregorianCalendar.DAY_OF_MONTH));		
+				
+				DayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay());		
 				}
-				else{
-					DayView.currentView = true;
-					MonthView.currentView = false;
-					FourDayView.currentView = false;
-					eventController.setCalendar(today.get(GregorianCalendar.YEAR), today.get(GregorianCalendar.MONTH), today.get(GregorianCalendar.DAY_OF_MONTH));
-					DayView.viewToday();
-					
-					rightPanel.remove(rightView);
-					rightPanel.add(DayView, BorderLayout.CENTER);
-					add(rightPanel);
-
-					lastView = rightView;
-					rightView = DayView;
-
-					rightPanel.validate();
-					rightPanel.repaint();
-				}
-				eventController.currentDate();
-				calendar.month();
-			}
 		});
-
+		
 		dayChoice.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DayView.currentView = true;
 				MonthView.currentView = false;
 				FourDayView.currentView = false;
-
+					
 				rightPanel.remove(rightView);
 				rightPanel.add(DayView, BorderLayout.CENTER);
 				add(rightPanel);
-
+				
 				lastView = rightView;
 				rightView = DayView;
-
+				
 				rightPanel.validate();
 				rightPanel.repaint();
 			}
@@ -143,14 +129,14 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				DayView.currentView = false;
 				FourDayView.currentView = false;
 				MonthView.currentView = true;
-
+				
 				rightPanel.add(MonthView, BorderLayout.CENTER);
 				add(rightPanel);
 				lastView = rightView;
 				rightView = MonthView;
 				rightPanel.validate();
 				rightPanel.repaint();
-
+				
 			}
 		});
 		fourDayChoice.addActionListener(new ActionListener(){
@@ -167,28 +153,28 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				rightPanel.validate();
 				rightPanel.repaint();	
 				FourDayView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+				
 
-
-
+			
 			}
 		});
 
+		
+		
+}
 
-
-	}
-
-
+	
 
 	/**
-	 * stateChanged() repaints ViewOption
-	 * @param: CalendarModel
-	 */
-	public void stateChanged(ChangeEvent e) 
-	{
-		rightPanel.remove(lastView);
-		rightPanel.add(rightView, BorderLayout.CENTER);
-		rightPanel.validate();
-		rightPanel.repaint();
-		this.repaint();
-	}
+ * stateChanged() repaints ViewOption
+ * @param: CalendarModel
+ */
+public void stateChanged(ChangeEvent e) 
+{
+	rightPanel.remove(lastView);
+	rightPanel.add(rightView, BorderLayout.CENTER);
+	rightPanel.validate();
+	rightPanel.repaint();
+	this.repaint();
+}
 }

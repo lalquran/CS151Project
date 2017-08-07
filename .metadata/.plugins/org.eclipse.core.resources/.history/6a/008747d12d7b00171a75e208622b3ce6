@@ -6,14 +6,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * DayView class is a JPanel with strings of times and JTables
  */
-public class DayView extends JPanel{
+public class DayView extends JPanel implements ViewOption{
 
 	
 	///////////////////////////////////////
@@ -265,14 +264,6 @@ public class DayView extends JPanel{
 		calendarView = view;
 	}
 	
-	public void viewToday(){
-		GregorianCalendar today = new GregorianCalendar();
-		int a = today.get(GregorianCalendar.YEAR);
-		int b = today.get(GregorianCalendar.MONTH);
-		int c = today.get(GregorianCalendar.DAY_OF_MONTH);
-		headerDate(a + " " + (b+1) + "/" + c);
-		view(a, b, c);
-	}
 	/*
 	private void addButtonActionListener(final JButton button) {
 

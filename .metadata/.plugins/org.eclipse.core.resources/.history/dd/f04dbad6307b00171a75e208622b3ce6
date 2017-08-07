@@ -6,20 +6,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * DayView class is a JPanel with strings of times and JTables
  */
-public class DayView extends JPanel{
+public class FourDayView extends JPanel implements ViewOption{
 
-	
 	///////////////////////////////////////
 	//Right side of the Application frame//
 	///////////////////////////////////////
-		public boolean currentView = true;
+	public boolean currentView = true;
 	public CalendarView calendarView;
 	private JLabel date;
 	private JScrollPane p;
@@ -28,7 +27,8 @@ public class DayView extends JPanel{
 	private CalendarController eventController;
 	private CalendarModel calendarModel;
 	private Color color;
-	public String option = "DayView";
+	public String option = "FourDayView";
+	public ArrayList<DayView> days;
 	/**
 	 * array of time strings
 	 */
@@ -43,8 +43,8 @@ public class DayView extends JPanel{
 	 * DayView constructor with CalendarModel parameter
 	 * @param: events
 	 */
-	public DayView(CalendarModel events) throws IOException {
-
+	public FourDayView(CalendarModel events) throws IOException {
+		days = new ArrayList<>();
 		date = new JLabel();
 		color = new Color(152, 217, 233);
 		p2 = new JPanel(new BorderLayout());
@@ -95,6 +95,7 @@ public class DayView extends JPanel{
 
 		leftTable.setTableHeader(null);
 		leftTable.setRowHeight(40);
+
 		leftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		leftTable.getColumnModel().getColumn(0).setPreferredWidth(50);
 		leftTable.setGridColor(Color.black);
@@ -103,49 +104,55 @@ public class DayView extends JPanel{
 	}
 
 	/**
-	 * format() method creates grid style JTable
+	 * formatGrids() method creates grid style JTable
 	 * @param: ArrayList events
 	 */
-	private void formatGrids(TreeMap<String, Event> events)
+	private void formatGrids(ArrayList<TreeMap<String, Event>> events)
 	{
-		Object[][] o = new Object[24][1];
+		Object[][] o = new Object[24][4];
 		Object[] t = {""};
-
-		if (events != null) {
-			final int[] h = new int[24];
-			for (Map.Entry<String, Event> a : events.entrySet())
-			{
-				int a1 = Event.getHour(a.getValue().getStartTime());
-				int b1 = Event.getHour(a.getValue().getEndTime());
-				int start = a1;
-				int end = b1 - 1 ;
-
-				o[start][0] = a.getValue().getTitle();
-
-				while (start <= end) {
-					h[start++] = 1;
-				}
-			}
-
-			rightTable = new JTable(o, t)
-			{
-				@Override
-				public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
-					Component comp = super.prepareRenderer(r, i, ic);
-
-					if (h[i] == 1) {
-						comp.setBackground(Color.PINK);
-					} else {
-						comp.setBackground(Color.white);
-					}
-					return comp;
-				}
-			};
-		} 
-		else 
-		{
-			rightTable = new JTable(o, t);
+		int i = 0;
+		for(TreeMap<String, Event> event : events){
 			
+			if (event != null) {
+				final int[] h = new int[24];
+
+				for (Map.Entry<String, Event> a : event.entrySet())
+				{
+					int a1 = Event.getHour(a.getValue().getStartTime());
+					int b1 = Event.getHour(a.getValue().getEndTime());
+					int start = a1;
+					int end = b1 - 1;
+					
+						o[start][i] = a.getValue().getTitle();
+
+						while (start <= end) {
+							h[start++] = 1;
+						}
+	
+				}
+
+				rightTable = new JTable(o, t)
+				{
+					@Override
+					public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
+						Component comp = super.prepareRenderer(r, i, ic);
+
+						if (h[i] == 1) {
+							comp.setBackground(Color.PINK);
+						} else {
+							comp.setBackground(Color.white);
+						}
+						return comp;
+					}
+				};
+				i++;
+			} 
+			else 
+			{
+				rightTable = new JTable(o, t);
+
+			}
 		}
 		rightTable.addMouseListener(new MouseListener(){
 
@@ -162,7 +169,7 @@ public class DayView extends JPanel{
 				//repaints\
 				if(eventController.littleCalendar != null){
 					eventController.littleCalendar.month();
-					eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
+					eventController.getFourDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());;
 				}
 
 			}
@@ -176,26 +183,27 @@ public class DayView extends JPanel{
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
-				
-				
+
+
+
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		});
 		rightTable.setTableHeader(null);
 		rightTable.setRowHeight(40);
+
 		rightTable.setGridColor(Color.black);
 		rightTable.setEnabled(false);
 	}
@@ -205,17 +213,24 @@ public class DayView extends JPanel{
 	 * show()
 	 * @param: ArrayList events
 	 */
-	private void show(TreeMap<String, Event> events) {
+	private void show(ArrayList<TreeMap<String, Event>> events) {
 
 		this.invalidate();
 		p2.removeAll();
 
-		displayTimes(events);
+
+		for(TreeMap<String, Event> event : events)
+		{
+			displayTimes(event);
+		}
 		formatGrids(events);
+
 		String a = eventController.currentDay();
 		int b = eventController.getMonth();
+		int bb = eventController.getUpcomingMonthInt();
 		int c = eventController.getDay();
-		headerDate(a + " " + (b+1) + "/" + c);
+		int cc = eventController.getFourthDay();
+		headerDate(a + " " + (b+1) + "/" + c + "-" + cc);//(bb+1)+ "/"+ 
 
 		p2.add(leftTable, BorderLayout.WEST);
 		p2.add(rightTable, BorderLayout.CENTER);
@@ -250,11 +265,20 @@ public class DayView extends JPanel{
 	 * @param: year, month and day
 	 */
 	public void view(int y, int m, int d) {
+
 		eventController.setCalendar(y, m, d); //return gc
-		System.out.println("view: "+eventController.date2MMYYDD());
-		//Show right side
-		show(calendarModel.getMyEvents(eventController.date2MMYYDD()));
+		//System.out.println("view: "+eventController.date2MMYYDD());
+
+		ArrayList<TreeMap<String, Event>> newList = new ArrayList<>();
+		newList.add(calendarModel.getMyEvents(eventController.date2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.nextDate2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.secondNextDate2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.thirdNextDate2MMYYDD()));
+		show(newList);
+
+
 	}
+
 
 	public CalendarModel getModel(){
 		return calendarModel;
@@ -264,15 +288,7 @@ public class DayView extends JPanel{
 	public void setCalendar(CalendarView view){
 		calendarView = view;
 	}
-	
-	public void viewToday(){
-		GregorianCalendar today = new GregorianCalendar();
-		int a = today.get(GregorianCalendar.YEAR);
-		int b = today.get(GregorianCalendar.MONTH);
-		int c = today.get(GregorianCalendar.DAY_OF_MONTH);
-		headerDate(a + " " + (b+1) + "/" + c);
-		view(a, b, c);
-	}
+
 	/*
 	private void addButtonActionListener(final JButton button) {
 

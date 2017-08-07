@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -13,7 +11,7 @@ import java.util.TreeMap;
 /**
  * DayView class is a JPanel with strings of times and JTables
  */
-public class FourDayView extends JPanel implements ViewOption{
+public class FourDayView extends JPanel{
 
 	///////////////////////////////////////
 	//Right side of the Application frame//
@@ -95,7 +93,7 @@ public class FourDayView extends JPanel implements ViewOption{
 
 		leftTable.setTableHeader(null);
 		leftTable.setRowHeight(40);
-		
+
 		leftTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		leftTable.getColumnModel().getColumn(0).setPreferredWidth(50);
 		leftTable.setGridColor(Color.black);
@@ -104,49 +102,56 @@ public class FourDayView extends JPanel implements ViewOption{
 	}
 
 	/**
-	 * format() method creates grid style JTable
+	 * formatGrids() method creates grid style JTable
 	 * @param: ArrayList events
 	 */
-	private void formatGrids(TreeMap<String, Event> events)
+	private void formatGrids(ArrayList<TreeMap<String, Event>> events)
 	{
-		Object[][] o = new Object[24][1];
+		Object[][] o = new Object[24][4];
 		Object[] t = {""};
+		int i = 0;
+		for(TreeMap<String, Event> event : events){
+			
+			if (event != null) {
+				final int[] h = new int[24];
 
-		if (events != null) {
-			final int[] h = new int[24];
-			for (Map.Entry<String, Event> a : events.entrySet())
-			{
-				int a1 = Event.getHour(a.getValue().getStartTime());
-				int b1 = Event.getHour(a.getValue().getEndTime());
-				int start = a1;
-				int end = b1 - 1 ;
+				for (Map.Entry<String, Event> a : event.entrySet())
+				{
+					int a1 = Event.getHour(a.getValue().getStartTime());
+					int b1 = Event.getHour(a.getValue().getEndTime());
+					int start = a1;
+					int end = b1 - 1;
+					
+						o[start][0] = a.getValue().getTitle();
 
-				o[start][0] = a.getValue().getTitle();
-
-				while (start <= end) {
-					h[start++] = 1;
+						while (start <= end) {
+							h[start++] = 1;
+						}
+	
 				}
-			}
 
-			rightTable = new JTable(o, t)
-			{
-				@Override
-				public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
-					Component comp = super.prepareRenderer(r, i, ic);
+				rightTable = new JTable(o, t)
+				{
+					@Override
+					public Component prepareRenderer(TableCellRenderer r, int i, int ic) {
+						Component comp = super.prepareRenderer(r, i, ic);
 
-					if (h[i] == 1) {
-						comp.setBackground(Color.PINK);
-					} else {
-						comp.setBackground(Color.white);
+						if (h[i] == 1) {
+							comp.setBackground(Color.PINK);
+						} else {
+							comp.setBackground(Color.white);
+						}
+						return comp;
 					}
-					return comp;
-				}
-			};
-		} 
-		else 
-		{
-			rightTable = new JTable(o, t);
+				};
+				
+			} 
+			else 
+			{
+				rightTable = new JTable(o, t);
 
+			}
+			//i++;
 		}
 		rightTable.addMouseListener(new MouseListener(){
 
@@ -197,7 +202,7 @@ public class FourDayView extends JPanel implements ViewOption{
 		});
 		rightTable.setTableHeader(null);
 		rightTable.setRowHeight(40);
-	
+
 		rightTable.setGridColor(Color.black);
 		rightTable.setEnabled(false);
 	}
@@ -207,21 +212,24 @@ public class FourDayView extends JPanel implements ViewOption{
 	 * show()
 	 * @param: ArrayList events
 	 */
-	private void show(TreeMap<String, Event> events) {
+	private void show(ArrayList<TreeMap<String, Event>> events) {
 
 		this.invalidate();
 		p2.removeAll();
 
-		displayTimes(events);
-		
+
+		for(TreeMap<String, Event> event : events)
+		{
+			displayTimes(event);
+		}
 		formatGrids(events);
-		
+
 		String a = eventController.currentDay();
 		int b = eventController.getMonth();
 		int bb = eventController.getUpcomingMonthInt();
 		int c = eventController.getDay();
 		int cc = eventController.getFourthDay();
-		headerDate(a + " " + (b+1) + "/" + c + "-" + (bb+1)+ "/"+ cc);
+		headerDate(a + " " + (b+1) + "/" + c + "-" + cc);//(bb+1)+ "/"+ 
 
 		p2.add(leftTable, BorderLayout.WEST);
 		p2.add(rightTable, BorderLayout.CENTER);
@@ -256,16 +264,20 @@ public class FourDayView extends JPanel implements ViewOption{
 	 * @param: year, month and day
 	 */
 	public void view(int y, int m, int d) {
-		//for(int i = 0; i < 4; i++){
-			eventController.setCalendar(y, m, d); //return gc
-			System.out.println("view: "+eventController.date2MMYYDD());
-			//Show right side
-			//System.out.println("Entered" + i);
-			show(calendarModel.getMyEvents(eventController.date2MMYYDD()));
-		//}
+
+		eventController.setCalendar(y, m, d); //return gc
+		//System.out.println("view: "+eventController.date2MMYYDD());
+
+		ArrayList<TreeMap<String, Event>> newList = new ArrayList<>();
+		newList.add(calendarModel.getMyEvents(eventController.date2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.nextDate2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.secondNextDate2MMYYDD()));
+		newList.add(calendarModel.getMyEvents(eventController.thirdNextDate2MMYYDD()));
+		show(newList);
+
 
 	}
-	
+
 
 	public CalendarModel getModel(){
 		return calendarModel;

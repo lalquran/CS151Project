@@ -15,6 +15,7 @@ public class CalendarController {
 	public MonthView MonthView;
 	public FourDayView FourDayView;
 	public CalendarView littleCalendar;
+	private ViewOption viewOption;
 	private GregorianCalendar gc;
 	public CalendarModel CalendarModel;
 

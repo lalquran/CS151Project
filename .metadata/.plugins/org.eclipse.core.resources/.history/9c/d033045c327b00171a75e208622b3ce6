@@ -15,8 +15,9 @@ public class CalendarController {
 	public MonthView MonthView;
 	public FourDayView FourDayView;
 	public CalendarView littleCalendar;
+	private ViewOption viewOption;
 	private GregorianCalendar gc;
-	public CalendarModel CalendarModel;
+	private CalendarModel CalendarModel;
 
 	public static String[] months = {
 			"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"

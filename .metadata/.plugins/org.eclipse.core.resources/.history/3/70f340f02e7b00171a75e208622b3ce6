@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 
 public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
+	private ViewController viewController;
 	private CalendarController eventController;
 	private CalendarModel CalendarModel;
 	//day view is the right side of the panel
@@ -31,6 +32,9 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 	 */
 	public SimpleCalendarFrame() throws IOException
 	{
+
+
+		viewController = new ViewController();
 		todayButton = new JButton("Today");
 		//has the day view
 		CalendarModel = new CalendarModel();
@@ -87,7 +91,10 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 		eventController.getDayView().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
 		rightPanel.repaint();
 
-	
+		//added views to view array here/////
+		viewController.add(DayView);
+		viewController.add(MonthView);
+		////////////////////////////////////
 
 		todayButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -113,8 +120,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 					rightPanel.validate();
 					rightPanel.repaint();
 				}
-				eventController.currentDate();
-				calendar.month();
+				calendar.repaint();
 			}
 		});
 

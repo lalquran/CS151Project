@@ -15,8 +15,9 @@ public class CalendarController {
 	public MonthView MonthView;
 	public FourDayView FourDayView;
 	public CalendarView littleCalendar;
+	private ViewOption viewOption;
 	private GregorianCalendar gc;
-	public CalendarModel CalendarModel;
+	private CalendarModel CalendarModel;
 
 	public static String[] months = {
 			"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -171,9 +172,9 @@ public class CalendarController {
 	}
 	public int getUpcomingMonthInt(){
 		int a = GregorianCalendar.MONTH;
-		if(gc.get(a) +1 >= 12)
+		if(gc.get(a) +2 > 12)
 			return 0;
-		return gc.get(a);
+		return gc.get(a) +1;
 	}
 	public void getLastMonth() 
 	{
