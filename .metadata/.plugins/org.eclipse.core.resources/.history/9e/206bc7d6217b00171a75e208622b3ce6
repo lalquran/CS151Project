@@ -160,7 +160,7 @@ public class CalendarController {
 		if(hm.get(months[month]) >= gc.get(a) + daysInAdvance )
 			return gc.get(a) + daysInAdvance;
 		else{
-			int offset = hm.get(months[month]) - gc.get(a);  
+			int offset = a - hm.get(months[month]);  
 			return daysInAdvance - offset;
 		}
 			
@@ -169,12 +169,6 @@ public class CalendarController {
 		int a = GregorianCalendar.MONTH;
 		gc.add(a, 1);
 		
-	}
-	public int getUpcomingMonthInt(){
-		int a = GregorianCalendar.MONTH;
-		if(gc.get(a) +2 > 12)
-			return 0;
-		return gc.get(a) +1;
 	}
 	public void getLastMonth() 
 	{

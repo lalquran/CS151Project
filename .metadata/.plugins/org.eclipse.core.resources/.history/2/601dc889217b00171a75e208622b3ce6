@@ -153,28 +153,18 @@ public class CalendarController {
 		return gc.get(a+2);
 	}
 	public int getFourthDay(){
-		int daysInAdvance = 3;
 		int a = GregorianCalendar.DAY_OF_MONTH;
 		int month = GregorianCalendar.MONTH;
 		HashMap<String, Integer> hm = new HashMap<String, Integer>(monthToNumbDays() );
-		if(hm.get(months[month]) >= gc.get(a) + daysInAdvance )
-			return gc.get(a) + daysInAdvance;
-		else{
-			int offset = hm.get(months[month]) - gc.get(a);  
-			return daysInAdvance - offset;
-		}
-			
+		if(hm.get(months[month]) >= gc.get(a) + 3 )
+			return gc.get(a) + 3;
+		else
+			return gc.get(a);
 	}
 	public void getUpcomingMonth(){
 		int a = GregorianCalendar.MONTH;
 		gc.add(a, 1);
 		
-	}
-	public int getUpcomingMonthInt(){
-		int a = GregorianCalendar.MONTH;
-		if(gc.get(a) +2 > 12)
-			return 0;
-		return gc.get(a) +1;
 	}
 	public void getLastMonth() 
 	{

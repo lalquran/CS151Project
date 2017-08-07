@@ -216,12 +216,14 @@ public class FourDayView extends JPanel implements ViewOption{
 		
 		formatGrids(events);
 		
+		
+		
 		String a = eventController.currentDay();
+		String ab = eventController.nextDate2MMYYDD();
 		int b = eventController.getMonth();
-		int bb = eventController.getUpcomingMonthInt();
 		int c = eventController.getDay();
 		int cc = eventController.getFourthDay();
-		headerDate(a + " " + (b+1) + "/" + c + "-" + (bb+1)+ "/"+ cc);
+		headerDate(a + " " + (b+1) + "/" + c + "-" + cc);
 
 		p2.add(leftTable, BorderLayout.WEST);
 		p2.add(rightTable, BorderLayout.CENTER);
@@ -256,13 +258,13 @@ public class FourDayView extends JPanel implements ViewOption{
 	 * @param: year, month and day
 	 */
 	public void view(int y, int m, int d) {
-		//for(int i = 0; i < 4; i++){
-			eventController.setCalendar(y, m, d); //return gc
+		for(int i = 0; i < 4; i++){
+			eventController.setCalendar(y, m, d + i); //return gc
 			System.out.println("view: "+eventController.date2MMYYDD());
 			//Show right side
-			//System.out.println("Entered" + i);
+			System.out.println("Entered" + i);
 			show(calendarModel.getMyEvents(eventController.date2MMYYDD()));
-		//}
+		}
 
 	}
 	

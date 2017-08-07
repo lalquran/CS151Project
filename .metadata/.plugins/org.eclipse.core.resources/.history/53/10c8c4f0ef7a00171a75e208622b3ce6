@@ -1,6 +1,5 @@
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 /**
  * EventController is the controller of application
@@ -19,32 +18,9 @@ public class CalendarController {
 	private GregorianCalendar gc;
 	private CalendarModel CalendarModel;
 
-	public static String[] months = {
-			"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-	};
 	public final static String[] daysOfMonth = {
 			"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 	};
-	/**
-	 * Matches the name of the month to the number of days in the month
-	 * @return HashMap month to number of days
-	 */
-	public static HashMap<String, Integer> monthToNumbDays(){
-		HashMap<String, Integer> newMap = new HashMap<String, Integer>();
-		newMap.put(months[0], 31);//Jan
-		newMap.put(months[1], 28);//Feb
-		newMap.put(months[2], 31);//March
-		newMap.put(months[3], 30);//April
-		newMap.put(months[4], 31);//May
-		newMap.put(months[5], 30);//June
-		newMap.put(months[6], 31);//July
-		newMap.put(months[7], 31);//August
-		newMap.put(months[8], 30);//September
-		newMap.put(months[9], 31);//October
-		newMap.put(months[10], 30);//November
-		newMap.put(months[11], 31);//December
-		return newMap;
-	}
 
 	/**
 	 * Constructor of EventController
@@ -153,28 +129,13 @@ public class CalendarController {
 		return gc.get(a+2);
 	}
 	public int getFourthDay(){
-		int daysInAdvance = 3;
 		int a = GregorianCalendar.DAY_OF_MONTH;
-		int month = GregorianCalendar.MONTH;
-		HashMap<String, Integer> hm = new HashMap<String, Integer>(monthToNumbDays() );
-		if(hm.get(months[month]) >= gc.get(a) + daysInAdvance )
-			return gc.get(a) + daysInAdvance;
-		else{
-			int offset = hm.get(months[month]) - gc.get(a);  
-			return daysInAdvance - offset;
-		}
-			
+		return gc.get(a);
 	}
 	public void getUpcomingMonth(){
 		int a = GregorianCalendar.MONTH;
 		gc.add(a, 1);
 		
-	}
-	public int getUpcomingMonthInt(){
-		int a = GregorianCalendar.MONTH;
-		if(gc.get(a) +2 > 12)
-			return 0;
-		return gc.get(a) +1;
 	}
 	public void getLastMonth() 
 	{

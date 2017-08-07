@@ -172,8 +172,6 @@ public class CalendarController {
 	}
 	public int getUpcomingMonthInt(){
 		int a = GregorianCalendar.MONTH;
-		if(gc.get(a) +2 > 12)
-			return 0;
 		return gc.get(a) +1;
 	}
 	public void getLastMonth() 

@@ -218,10 +218,9 @@ public class FourDayView extends JPanel implements ViewOption{
 		
 		String a = eventController.currentDay();
 		int b = eventController.getMonth();
-		int bb = eventController.getUpcomingMonthInt();
 		int c = eventController.getDay();
 		int cc = eventController.getFourthDay();
-		headerDate(a + " " + (b+1) + "/" + c + "-" + (bb+1)+ "/"+ cc);
+		headerDate(a + " " + (b+1) + "/" + c + "-" + cc);
 
 		p2.add(leftTable, BorderLayout.WEST);
 		p2.add(rightTable, BorderLayout.CENTER);
