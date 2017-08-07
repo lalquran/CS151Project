@@ -15,6 +15,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
     //day view is the right side of the panel
     private DayView DayView;
     private MonthView MonthView;
+    private AgendaView AgendaView;
     final JPanel rightPanel;
     private JPanel lastView = new JPanel();
     private JPanel rightView = new JPanel();
@@ -54,9 +55,13 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
         CalendarModel.addChangeListener(this);
 
         eventController = new CalendarController(CalendarModel);
+
         eventController.set(DayView);
+    
 
         MonthView = new MonthView(eventController, CalendarModel);
+        AgendaView = new AgendaView(CalendarModel);
+        eventController.setAgendaView(AgendaView);
         
         final CalendarView calendar = new CalendarView(eventController, CalendarModel);
         JPanel left = new JPanel();
@@ -109,7 +114,34 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				repaint();
 			}
         });
+        agendaChoice.addActionListener(new ActionListener(){
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			rightPanel.remove(rightView);
+    			rightPanel.add(AgendaView, BorderLayout.CENTER);
+    			add(rightPanel);
+    			lastView = rightView;
+    			rightView = AgendaView;
+    			String sYear, sMonth, sDay, eYear, eMonth, eDay;
+    			sYear = JOptionPane.showInputDialog("Please Provide a Range for the agenda. Whats's the range's start year? ");
+    			sMonth = JOptionPane.showInputDialog("Start Month? ");
+    			sDay = JOptionPane.showInputDialog("Start Day? ");
+    			eYear = JOptionPane.showInputDialog("End Year? ");
+    			eMonth = JOptionPane.showInputDialog("End Month? ");
+    			eDay = JOptionPane.showInputDialog("End Day? ");
+    			AgendaView.setStartYear(Integer.parseInt(sYear));
+    	        AgendaView.setStartMonth(Integer.parseInt(sMonth));
+    	        AgendaView.setStartDay(Integer.parseInt(sDay));
+    	        AgendaView.setEndYear(Integer.parseInt(eYear));
+    	        AgendaView.setEndMonth(Integer.parseInt(eMonth));
+    	        AgendaView.setEndDay(Integer.parseInt(eDay));
+    			AgendaView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+    			rightPanel.validate();
+    			repaint();
+    		}
+        });
     }
+    
 
   
  

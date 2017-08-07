@@ -11,6 +11,7 @@ public class CalendarController {
 	///Manipulates the date//
 	/////////////////////////
 	private DayView DayView;
+	private AgendaView AgendaView;
 	private GregorianCalendar gc;
 	private CalendarModel CalendarModel;
 
@@ -54,6 +55,10 @@ public class CalendarController {
 	{
 		this.DayView = a;
 	}
+	
+	public void setAgendaView(AgendaView a){
+		this.AgendaView = a;
+	}
 
 	/**
 	 * get()
@@ -62,6 +67,10 @@ public class CalendarController {
 	public DayView get()
 	{
 		return this.DayView;
+	}
+	
+	public AgendaView getAgenda(){
+		return this.AgendaView;
 	}
 
 	/**

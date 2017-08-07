@@ -2,11 +2,17 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.text.ParseException;
 import java.util.*;
 
@@ -34,7 +40,7 @@ public class CalendarModel {
 		}
 		catch(Exception e) {
 		}
-		l = new ArrayList();
+		l = new ArrayList<>();
 	}
 	/**
 	 * addChangeListener() adds listener to array list
@@ -69,8 +75,9 @@ public class CalendarModel {
 	 * new event and add it to the tree map
 	 *
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	public static boolean createEvent(String title, String eventDate, String startingTime, String endingTime) throws ParseException {
+	public static boolean createEvent(String title, String eventDate, String startingTime, String endingTime) throws ParseException, IOException {
 		listOfEvents = new TreeMap<>();
 
 		boolean flag = false;
@@ -85,6 +92,8 @@ public class CalendarModel {
 			tm.put(createdEvent.getEventDate(), new TreeMap<String, Event>());
 		}
 
+
+		
 		listOfEvents = tm.get(createdEvent.getEventDate());
 
 		if(listOfEvents.size()==0){
@@ -99,6 +108,7 @@ public class CalendarModel {
 				listOfEvents.put(startingTime, createdEvent);
 
 				tm.put(createdEvent.getEventDate(), listOfEvents);
+			
 				flag = true;
 			}
 		}

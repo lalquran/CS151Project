@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.ParseException;
 
 /**
@@ -86,11 +87,12 @@ class CreateEventView extends JFrame implements ActionListener
                 this.setVisible(false);
                 this.dispose();
                 eventController.get().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+                eventController.getAgenda().view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
                 model.update();
             }else{
             	error.setText("Error, Please indicate a valid time: ");
             }
-        } catch (ParseException e1) {
+        } catch (ParseException | IOException e1) {
             e1.printStackTrace();
         }
 
