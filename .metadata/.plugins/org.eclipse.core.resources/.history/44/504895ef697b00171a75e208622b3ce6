@@ -10,11 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 
-/**
- * Holds all the panels and outer buttons for the program
- * @author josh
- *
- */
+
 public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
 	private CalendarController eventController;

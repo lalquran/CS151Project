@@ -4,7 +4,8 @@
 	<item value="3" key="TypeHierarchyViewPart.orientation"/>
 	<item value="false" key="TypeHierarchyViewPart.linkeditors"/>
 	<item value="2" key="TypeHierarchyViewPart.hierarchyview"/>
-	<item value="/Users/josh/Documents/summer 2017/cs 151/assignment 3/GUICalendar/GUICalendar" key="org.eclipse.jdt.ui.last.external.project"/>
+	<item value="filter_imports;" key="filters_last_used"/>
+	<item value="/Users/josh/Downloads/CS151Project-master" key="org.eclipse.jdt.ui.last.external.project"/>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
 	</section>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
@@ -26,6 +27,8 @@
 	<section name="quick_assist_proposal_size">
 	</section>
 	<section name="completion_proposal_size">
+		<item value="514" key="size.y"/>
+		<item value="272" key="size.x"/>
 	</section>
 	<section name="JavaElementSearchActions">
 	</section>

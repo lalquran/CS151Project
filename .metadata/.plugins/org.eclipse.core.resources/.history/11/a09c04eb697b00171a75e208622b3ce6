@@ -3,7 +3,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /**
- * EventController is the controller of the application
+ * EventController is the controller of application
  */
 public class CalendarController {
 

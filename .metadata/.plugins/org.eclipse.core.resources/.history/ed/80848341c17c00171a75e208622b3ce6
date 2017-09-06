@@ -10,11 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 
-/**
- * Holds all the panels and outer buttons for the program
- * @author josh
- *
- */
+
 public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
 	private CalendarController eventController;
@@ -23,6 +19,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 	private DayView DayView;
 	private MonthView MonthView;
 	private FourDayView FourDayView;
+	private AgendaView AgendaView;
 	final JPanel rightPanel;
 	private JButton todayButton;
 	private JPanel lastView = new JPanel();
@@ -69,6 +66,11 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 		eventController.setLittleCalendar(calendar);
 		MonthView = new MonthView(eventController,CalendarModel, calendar);
 		eventController.setMonthView(MonthView);
+		
+		AgendaView = new AgendaView(CalendarModel);
+        eventController.setAgendaView(AgendaView);
+		
+
 
 		JPanel left = new JPanel();
 		left.setLayout(new BorderLayout());
@@ -128,6 +130,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				DayView.currentView = true;
 				MonthView.currentView = false;
 				FourDayView.currentView = false;
+				AgendaView.currentView = false;
 
 				rightPanel.remove(rightView);
 				rightPanel.add(DayView, BorderLayout.CENTER);
@@ -147,6 +150,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				DayView.currentView = false;
 				FourDayView.currentView = false;
 				MonthView.currentView = true;
+				AgendaView.currentView = false;
 
 				rightPanel.add(MonthView, BorderLayout.CENTER);
 				add(rightPanel);
@@ -164,6 +168,7 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 				DayView.currentView = false;
 				MonthView.currentView = false;
 				FourDayView.currentView = true;
+				AgendaView.currentView = false;
 				rightPanel.add(FourDayView, BorderLayout.CENTER);
 				add(rightPanel);
 				lastView = rightView;
@@ -176,6 +181,38 @@ public class SimpleCalendarFrame extends JFrame implements ChangeListener {
 
 			}
 		});
+		
+		agendaChoice.addActionListener(new ActionListener(){
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			DayView.currentView = false;
+				MonthView.currentView = false;
+				FourDayView.currentView = false;
+				AgendaView.currentView = true;
+				
+    			rightPanel.remove(rightView);
+    			rightPanel.add(AgendaView, BorderLayout.CENTER);
+    			add(rightPanel);
+    			lastView = rightView;
+    			rightView = AgendaView;
+    			String sYear, sMonth, sDay, eYear, eMonth, eDay;
+    			sYear = JOptionPane.showInputDialog("Please Provide a Range for the agenda. Whats's the range's start year? ");
+    			sMonth = JOptionPane.showInputDialog("Start Month? ");
+    			sDay = JOptionPane.showInputDialog("Start Day? ");
+    			eYear = JOptionPane.showInputDialog("End Year? ");
+    			eMonth = JOptionPane.showInputDialog("End Month? ");
+    			eDay = JOptionPane.showInputDialog("End Day? ");
+    			AgendaView.setStartYear(Integer.parseInt(sYear));
+    	        AgendaView.setStartMonth(Integer.parseInt(sMonth));
+    	        AgendaView.setStartDay(Integer.parseInt(sDay));
+    	        AgendaView.setEndYear(Integer.parseInt(eYear));
+    	        AgendaView.setEndMonth(Integer.parseInt(eMonth));
+    	        AgendaView.setEndDay(Integer.parseInt(eDay));
+    			AgendaView.view(eventController.getYear(), eventController.getMonth(), eventController.getDay());
+    			rightPanel.validate();
+    			repaint();
+    		}
+        });
 
 
 
